@@ -1,0 +1,16 @@
+{
+  "name": "mongodb-backup",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Zachary Per",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mongoose": "^6.0.13",
+    "nodemon": "^2.0.15"
+  }
+}

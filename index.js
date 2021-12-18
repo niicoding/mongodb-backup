@@ -45,7 +45,7 @@ async function main() {
 
     Post.find({}, function(error,document) {
         BackupPost.collection.insertMany(document, { ordered:false }, (error) => {
-            console.log(error.message);
+            console.log(error);
         });
     });
 

@@ -1,15 +1,43 @@
+const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
 // An array of post document ids.
 let currentPosts_ids = [];
 // Start the main function and log any errors.
-main().catch(err => console.log(err));
 
+const urlencoderParser = bodyParser.urlencoded({ extended: false });
+
+let localDatabaseLink;
+let cloudDatabaseLink;
+
+const app = express();
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/saved', function(req, res) {
+    res.sendFile(__dirname + '/saved.html');
+})
+
+app.listen(3000, () => {
+    console.log('App listening on port 3000');
+});
+
+app.post('/databases_post', urlencoderParser, function (req, res) {
+    localDatabaseLink = req.body.local_database
+    cloudDatabaseLink = req.body.cloud_database
+    res.redirect('/saved')
+
+    main().catch(err => console.log(err));
+})
 
 async function main() {
     // This creates a connection to our local mongodb server and opens the portfolio-blog database by default.
-    const localDatabase = await mongoose.createConnection('mongodb://localhost:27017/portfolio-blog');
+    const localDatabase = await mongoose.createConnection(localDatabaseLink);
     // This creates a connection to our Atlas mongodb server and opens the postsBackup database by default.
-    const cloudDatabase = await mongoose.createConnection('mongodb+srv://zacharyperales:zacharyperales666@cluster0.u8yqr.mongodb.net/postsBackup?retryWrites=true&w=majority');
+    const cloudDatabase = await mongoose.createConnection(cloudDatabaseLink);
+
     const Schema = new mongoose.Schema({});
 
     const Post = localDatabase.model("Post", Schema, "posts");
@@ -35,5 +63,4 @@ async function main() {
     }
 
     printAllPosts();
-    setTimeout(main, 10000);
 }
